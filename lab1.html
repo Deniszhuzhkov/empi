@@ -1,0 +1,195 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <p>Формула Стерджеса</p>
+
+    <div class="offset">
+        <span><i class="it">n</i> = </span><input min="0" type="number" id="fSterjes" placeholder="кількість ">
+
+    </div>
+    
+    <div class="offset">
+        <span><i class="it">l</i> = </span> <span id="fSterjesFuild"></span>
+    </div>
+
+    <p class="comment"> <i>*Com* Визначав по формулі (<i class="it">l</i> = 1 + 3.322 * <i class="it">lg n</i> = 1 + 3.32 * <i class="it">log<sub>10</sub> n</i>  ) </i></p>
+    
+    <hr>
+
+    <h2>ЛБ1</h2>
+    <h3>1.1</h3>
+    <div>
+        {<span id="math200"></span>}
+    </div>
+    <h3>1.2</h3>
+
+    <script>
+        // Glob functions 
+        const gtid = function(name) {
+            return document.getElementById(name)
+        } 
+        
+        const getSterjes = function(n) {
+            return (1 +  3.322 * Math.log10(n)).toFixed(0)
+            // return (1 + Math.log2(n)).toFixed(0)
+        }
+
+        const getRandomInt = function (min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        // SORT
+        const getNum = (num, index) => {
+            const strNum = String(num);
+            let end = strNum.length - 1;
+            const foundNum = strNum[end - index];
+
+            if (foundNum === undefined) return 0;
+            else return foundNum;
+        };
+
+        const largestNum = arr => {
+            let largest = "0";
+
+            arr.forEach(num => {
+                const strNum = String(num);
+
+                if (strNum.length > largest.length) largest = strNum;
+            });
+
+        return largest.length;
+        };
+
+        const radixSort = arr => {
+            let maxLength = largestNum(arr);
+
+            for (let i = 0; i < maxLength; i++) {
+                let buckets = Array.from({ length: 10 }, () => []);
+
+                for (let j = 0; j < arr.length; j++) {
+                    let num = getNum(arr[j], i);
+
+                    if (num !== undefined) buckets[num].push(arr[j]);
+                };
+                arr = buckets.flat();
+            };
+            return arr;
+        };
+
+        const sort = arr => { 
+            let belowArr = [], aboveArr = [];
+            for(let i = 0; i < arr.length; i++ ) {
+                if(arr[i] < 0) {
+
+                    belowArr.push(arr[i] * -1);
+                    
+                } else  {
+                    aboveArr.push(arr[i]);
+                    
+                }   
+            }
+            let masB = radixSort(belowArr);
+            let masA = radixSort(aboveArr);
+            
+            let nArr = [] ;
+            for (let i=masB.length-1; i> 0; i--) {
+                nArr.push(masB[i] * -1)
+            }
+
+            for (let i=0; i< masA.length; i ++ ) {
+                nArr.push(masA[i])
+            }
+                
+            return  nArr;
+        }
+        // SORT
+
+        const random = function(n) {
+            let div = document.createElement('span');
+            
+            let rand = {};
+            let mats = [];
+        
+            
+            for(let i=0; i < n; i++ ){
+                let z = getRandomInt(1, 2000);
+                mats[i] = z
+            }
+
+            let sortMats = sort(mats);
+
+            for(let i=0; i < sortMats.length -1; i++ ){
+                let span = document.createElement('span');
+                span.textContent = sortMats[i] + ", ";
+                div.appendChild(span)
+            }
+
+            let span = document.createElement('span');
+                span.textContent = sortMats[sortMats.length-1];
+                div.appendChild(span);
+            rand.mats = mats;
+            rand.html = div;
+            return rand
+        }
+        
+
+
+        // variables
+        let fSterjes = gtid('fSterjes');
+        let fSterjesFuild = gtid('fSterjesFuild'); 
+        let math200 = gtid('math200'); 
+        let rand 
+     
+        
+        
+        
+        // use
+        fSterjes.oninput = function() {
+            let sterjesCount = getSterjes(fSterjes.value);
+            fSterjesFuild.innerHTML = sterjesCount;
+            rand = random(fSterjes.value);
+            math200.innerHTML = ""
+            math200.appendChild(rand.html);
+        }
+
+        
+
+
+        
+            
+
+    </script>
+    <style>
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .it {
+            font-family: auto;
+            font-size: 20px;
+        }
+        .it sub,
+        .it sup {
+            font-size: 10px;
+        }
+
+        .offset {
+            padding: 8px;
+        }
+
+        .comment {
+            color: dimgrey;
+            font-size: 12px;
+        }
+    </style>
+</body>
+</html>
+
